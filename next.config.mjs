@@ -21,6 +21,19 @@ const nextConfig = {
     parallelServerBuildTraces: true,
     parallelServerCompiles: true,
   },
+  async headers() {
+    return [
+      {
+        source: '/api/share-price',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 's-maxage=600, stale-while-revalidate=300',
+          },
+        ],
+      },
+    ];
+  },
 }
 
 mergeConfig(nextConfig, userConfig)

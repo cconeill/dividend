@@ -10,6 +10,13 @@ export async function GET() {
             next: { revalidate: 600 },
         });
 
+        // log cache 
+        // if (response.headers.get('x-vercel-cache') === 'HIT') {
+        //     console.log('✅ Vercel Cache HIT: Returning cached data');
+        // } else {
+        //     console.log('⚠️ Vercel Cache MISS: Fetching new data from API');
+        // }
+
         if (!response.ok) {
             // If the response is not OK, log the response text
             const errorText = await response.text();
