@@ -1,16 +1,14 @@
 // app/api/share-price/route.js
 export async function GET() {
-    const API_KEY = process.env.FINNHUB_API_KEY; // Replace with your actual API key
-    const symbol = 'pcg'; // Example stock symbol
+    const API_KEY = process.env.FINNHUB_API_KEY;
+    const symbol = 'pcg';
     const url = `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${API_KEY}`;
 
-    console.log('Fetching share price from:', url); // Debugging statement
-
     try {
-        const response = await fetch(url);
-        
-        // Log the response status
-        console.log('Response status:', response.status);
+        const response = await fetch(url, {
+            // Cache response for 10 minutes.
+            next: { revalidate: 600 },
+        });
 
         if (!response.ok) {
             // If the response is not OK, log the response text
@@ -20,7 +18,7 @@ export async function GET() {
         }
 
         const data = await response.json();
-        console.log('Fetched data:', data); // Debugging statement
+        // console.log('Fetched data:', data); // Debugging statement
         return new Response(JSON.stringify(data.h), {
             status: 200,
             headers: {
@@ -28,7 +26,7 @@ export async function GET() {
             },
         });
     } catch (error) {
-        console.error('Error fetching share price:', error); // Log the error
+        console.error('Error fetching share price:', error);
         return new Response('Error fetching share price', { status: 500 });
     }
 }
