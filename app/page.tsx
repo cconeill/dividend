@@ -1,14 +1,30 @@
 "use client"
 
-import type React from "react"
+import * as React from "react"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Slider } from "@/components/ui/slider"
 import { Input } from "@/components/ui/input"
 
 export default function LandingPage() {
-  const [inputValue, setInputValue] = useState<number>(1000)
-  const divisor = 50 // The fixed dollar figure to divide by
+  const [sharePrice, setSharePrice] = useState<number | null>(null);
+
+  useEffect(() => {
+    const fetchSharePrice = async () => {
+      try {
+          const response = await fetch('/api/share-price');
+          const price = await response.json();
+          setSharePrice(price);
+      } catch (error) {
+          console.error('Error fetching share price:', error);
+      }
+  };
+
+    fetchSharePrice();
+  }, []); // Empty dependency array means this runs once on mount
+
+  const [inputValue, setInputValue] = useState<number>(100)
+  const yearlyDividend = 0.1 
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number.parseFloat(event.target.value)
@@ -19,16 +35,17 @@ export default function LandingPage() {
     setInputValue(value[0])
   }
 
-  const result = Math.floor(inputValue / divisor)
+  const numberOfShares = Math.floor(inputValue * 12 / yearlyDividend)
+  const priceOfShares = sharePrice !== null ? Math.floor(numberOfShares * sharePrice) : 0
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-24">
-      <h1 className="text-4xl font-bold mb-4">Dollar Divider</h1>
-      <p className="text-xl text-muted-foreground mb-12">Calculate how many $50 items you can buy</p>
+      <h1 className="text-4xl font-bold mb-4">PG&E Dividend Calculator</h1>
+      <p className="text-xl text-muted-foreground mb-12">Calculate how many shares of PG&E you need to own to pay your electricity bill</p>
 
       <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-8">
         <div className="space-y-6">
-          <h2 className="text-2xl font-semibold mb-4">Enter Amount</h2>
+          <h2 className="text-2xl font-semibold mb-4">Enter your average monthly electricity bill</h2>
           <Input
             type="number"
             value={inputValue}
@@ -39,24 +56,27 @@ export default function LandingPage() {
           />
           <Slider
             min={0}
-            max={10000}
-            step={50}
+            max={500}
+            step={10}
             value={[inputValue]}
             onValueChange={handleSliderChange}
             aria-label="Dollar amount slider"
           />
         </div>
+        <div className="space-y-6">
         <div className="bg-muted p-6 rounded-lg">
-          <h2 className="text-2xl font-semibold mb-4">Result</h2>
-          <p className="text-lg mb-4">With ${inputValue.toFixed(2)}, you can buy:</p>
-          <p className="text-4xl font-bold text-primary mb-4">{result} items</p>
+          <p className="text-lg mb-4">To cover a monthly bill of ${inputValue.toFixed(2)}, you will need to buy:</p>
+          <p className="text-4xl font-bold text-primary mb-4">{numberOfShares} shares</p>
           <p className="text-muted-foreground">
-            This calculation is based on a fixed price of ${divisor} per item. Adjust the input on the left to see how
-            many items you can afford.
+            This calculation is based on a quarterly dividend of ${yearlyDividend} per share.
           </p>
         </div>
-      </div>
+        <div className="bg-muted p-6 rounded-lg">
+          <p className="text-lg mb-4">At PG&E's current price of ${sharePrice} per share, this will cost you:</p>
+          <p className="text-4xl font-bold text-primary mb-4">${priceOfShares} dollars</p>
+        </div>
+        </div>
+        </div>
     </main>
   )
 }
-
