@@ -102,7 +102,7 @@ export default function LandingPage() {
         </div>
         </div>
       <footer className="mt-20 text-center">
-          Source code <a href="https://github.com/cconeill/dividend/tree/main" target="_blank" rel="noopener noreferrer" className="underline">cconeill/dividend</a> 👨‍💻
+          Source code <a href="https://github.com/cconeill/dividend/" target="_blank" rel="noopener noreferrer" className="underline">cconeill/dividend</a> 👨‍💻
           <p>Made with ❤️ in San Francisco</p>
       </footer>
     </main>
