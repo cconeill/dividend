@@ -24,7 +24,8 @@ export default function LandingPage() {
   }, []); // Empty dependency array means this runs once on mount
 
   const [inputValue, setInputValue] = useState<number>(100)
-  const yearlyDividend = 0.1 
+  // Quarterly dividend is $0.10
+  const yearlyDividend = 0.1 * 4;
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number.parseFloat(event.target.value)
@@ -91,7 +92,7 @@ export default function LandingPage() {
           <p className="text-lg mb-4">To cover a monthly bill of ${inputValue}, you will need to buy:</p>
           <p className="text-4xl font-bold text-primary mb-4">{formattedNumberOfShares} shares</p>
           <p className="text-muted-foreground">
-            This calculation is based on a quarterly dividend of ${yearlyDividend} per share.
+            This calculation is based on a yearly dividend of ${yearlyDividend} per share.
           </p>
         </div>
         <div className="bg-muted p-8 rounded-lg" style={{ boxShadow: "0 4px 30px rgba(255, 255, 255, 0.5)", backgroundColor: "rgba(200, 200, 200, 0.8)" }}>
