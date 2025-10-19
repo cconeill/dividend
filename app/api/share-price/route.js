@@ -1,7 +1,7 @@
 // app/api/share-price/route.js
 export async function GET() {
     const API_KEY = process.env.FINNHUB_API_KEY;
-    const symbol = 'pcg';
+    const symbol = 'PCG';
     const url = `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${API_KEY}`;
 
     try {
